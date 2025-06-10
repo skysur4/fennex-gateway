@@ -7,7 +7,7 @@ pluginManagement {
         mavenCentral()
     }
 	plugins {
-		id "org.springframework.boot" version "3.2.10"
+		id "org.springframework.boot" version "3.4.6"
 	}
 }
-rootProject.name = 'cooltime-gateway'
+rootProject.name = 'fennex-gateway'

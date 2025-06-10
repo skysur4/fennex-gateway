@@ -18,15 +18,16 @@ package io.cooltime.gateway.authorization;
 
 import org.springframework.security.oauth2.client.registration.ReactiveClientRegistrationRepository;
 import org.springframework.security.oauth2.client.web.server.DefaultServerOAuth2AuthorizationRequestResolver;
-import org.springframework.security.web.server.util.matcher.PathPatternParserServerWebExchangeMatcher;
 import org.springframework.stereotype.Component;
-
-import io.cooltime.gateway.properties.AuthenticationProperties;
 
 @Component
 public class CooltimeAuthorizationRequestResolver extends DefaultServerOAuth2AuthorizationRequestResolver {
 
-	public CooltimeAuthorizationRequestResolver(ReactiveClientRegistrationRepository clientRegistrationRepository, AuthenticationProperties authenticationProperties) {
-		super(clientRegistrationRepository, new PathPatternParserServerWebExchangeMatcher(authenticationProperties.getAuthorizationUrl()));
+	public CooltimeAuthorizationRequestResolver(ReactiveClientRegistrationRepository clientRegistrationRepository) {
+		super(clientRegistrationRepository);
 	}
+//
+//	public CooltimeAuthorizationRequestResolver(ReactiveClientRegistrationRepository clientRegistrationRepository, AuthenticationProperties authenticationProperties) {
+//		super(clientRegistrationRepository, new PathPatternParserServerWebExchangeMatcher(authenticationProperties.getAuthorizationUrl()));
+//	}
 }

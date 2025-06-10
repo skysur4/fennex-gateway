@@ -6,26 +6,19 @@
 ### Application 설정 
 ###########################################################################
 application:
-  # 인증 관련 context #
-  authentication:
-    authorization-url: '/${spring.application.root}/login/oauth2/authorization/{registrationId}'
-    authentication-url: '/${spring.application.root}/login/oauth2/code/{registrationId}'
-    login-url: /${spring.application.root}/login
-    logout-url: /${spring.application.root}/logout
-  
   # 인증완료 redirect url #
   frontend:
     scheme: http
-    host: cooltime.io
+    host: fennex.pro
     context: 
     port: 80
-  gateway: http://api.cooltime.io
+  gateway: http://api.fennex.pro
 
   # CORS 허용 도메인 #
   cors: 
     allowed-origin:
-    - http://cooltime.io
-    - https://cooltime.io
+    - http://fennex.io
+    - https://fennex.pro
 
 ###########################################################################
 ### server 설정 
@@ -47,9 +40,8 @@ server:
 ###########################################################################
 spring:
   application:
-    root: gateway
-    name: cooltime-gateway
-    realm: cooltime
+    name: fennex-gateway
+    realm: fennex
 
   profiles:
     active: local
@@ -66,14 +58,25 @@ spring:
   ### Redis 설정 ###
   data:
     redis:
-      host: 127.0.0.1
+      host: 192.168.50.210
       port: 6379
+
+  ### JPA 설정 ### 
+  jpa:
+    hibernate:
+      ddl-auto: create # 테이블 유효성 검사
+      naming.physical-strategy: org.hibernate.boot.model.naming.CamelCaseToUnderscoresNamingStrategy
+    properties:
+      hibernate:
+        show_sql: true
+        format_sql: true
+        use_sql_comments: true
 
   ### Datasource 설정 ###
   r2dbc:
-    url: r2dbc:postgresql://127.0.0.1:5432/cooltime
-    username: cooltime
-    password: ENC(xpgoun0Urk0dmen22yNCktet0Ha6mfIdb6ZENT0Km51PvW96YE32O7GDPiq4uDHF)
+    url: r2dbc:postgresql://192.168.50.210:5432/home
+    username: chris
+    password: rotoRl12!@
     pool:
       initial-size: 5
       max-size: 5
@@ -102,27 +105,25 @@ spring:
     oauth2:
       client:
         provider:
-          keycloak:
-            issuer-uri: https://auth.cooltime.io/realms/${spring.application.realm}
+          fennex:
+            issuer-uri: https://kc.fennex.pro/realms/${spring.application.realm}
+            jwk-set-uri: https://kc.fennex.pro/realms/${spring.application.realm}/protocol/openid-connect/certs
+            user-name-attribute: sub
         registration:
-          keycloak:
-            provider: keycloak
-            client-id: cooltime-client
-            client-secret: ENC(5w9SJ6imh+bj1KdFILzc9Nr99TOnlf1PtyQtpnSQWxTy4fJLnZuCDVAgQ18KiI4fpE3bxAUpmhNtCmYrZHC08GS78FA1ku4YUW7ga3mvqEw=)
-            redirect-uri: "${application.gateway}/${spring.application.root}/login/oauth2/code/{registrationId}"
+          fennex:
+            provider: fennex
+            client-id: fennex-client
+            client-secret: fennex-client
+            #: "${application.gateway}/oauth2/code/{registrationId}"
             authorization-grant-type: authorization_code
             scope: openid
-      resourceserver:
-        jwt:
-          issuer-uri: https://auth.cooltime.io/realms/${spring.application.realm}
 
     access:
       free:
-      - /${spring.application.root}/**
       - /favicon.ico
-      - /*/actuator/**
-      - /*/swagger/**
-      - /*/swagger-ui/**
+      - /actuator/**
+      - /swagger/**
+      - /swagger-ui/**
 
   ### 메시지 설정 ###
   messages:
@@ -149,13 +150,13 @@ logging:
           QUERY: debug # for queries
           PARAM: debug # for parameters    
   file: 
-    name: app/logs/${spring.application.root}/${hostname}/${spring.application.name}.log
+    name: app/logs/${hostname}/${spring.application.name}.log
   pattern:
     console: "%d{HH:mm:ss.SSS} %clr(${LOG_LEVEL_PATTERN:-%5p}) %-10logger{0} %msg%n"
     file: "%d{HH:mm:ss.SSS} %-5level %-10logger{0} %msg%n"
   logback:
     rollingpolicy: 
-      file-name-pattern: app/logs/${spring.application.root}/${hostname}/${spring.application.name}.%d{yyyy-MM-dd}.%i.gz
+      file-name-pattern: app/logs/${hostname}/${spring.application.name}.%d{yyyy-MM-dd}.%i.gz
       max-file-size: 100MB
       max-history: 15
       
@@ -167,25 +168,12 @@ management:
     tags:
       application: ${spring.application.name}
   endpoint:
-    info:
-      enabled: true
-    env:
-      enabled: true
     health:
-      enabled: true
       probes:
         enabled: true
-  health:
-    diskspace:
-      enabled: false
-    db:
-      enabled: false
-    redis:
-      enabled: false
   endpoints:
-    enabled-by-default: false
     web:
-      base-path: /${spring.application.root}/actuator
+      base-path: /actuator
       exposure:
         include: '*'
 
@@ -195,11 +183,11 @@ management:
 springdoc:
   swagger-ui:
     use-root-path: true
-    path: /${spring.application.root}/swagger.html
+    path: /swagger
     tags-sorter: alpha
     operations-sorter: alpha
   api-docs:
-    path: /${spring.application.root}/swagger/docs
+    path: /swagger/docs
     groups:
       enabled: true
   cache:
@@ -208,14 +196,14 @@ springdoc:
     title: Gateway API
     description: Apis for Gateway
     version: 1.0.0
-    terms-of-service: http://cooltime.io/termsofservice
+    terms-of-service: http://fennex.pro/termsofservice
     contact:
       name: Administrator
-      url: https://cooltime.io
-      email: admin@cooltime.io
+      url: https://fennex.pro
+      email: admin@fennex.pro
     license:
       name: MIT License
-      url: https://cooltime.io/license
+      url: https://fennex.pro/license
 
 ###########################################################################
 ### Router data 설정 

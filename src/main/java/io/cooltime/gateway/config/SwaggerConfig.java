@@ -18,7 +18,8 @@ public class SwaggerConfig {
 	  GroupedOpenApi publicApi() {
 	      return GroupedOpenApi.builder()
 	              .group("public")
-	              .pathsToMatch("/public/**")
+	              .pathsToMatch("/**")
+	              .pathsToExclude("/gateway/**", "/admin/**")
 	              .addOpenApiCustomizer(openApi -> openApi.info(swaggerProperties.getInfo()))
 	              .build();
 	  }

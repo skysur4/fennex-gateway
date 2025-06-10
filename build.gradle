@@ -9,7 +9,7 @@ sourceCompatibility = '17'
 targetCompatibility = '17'
 
 ext {
-	set('springCloudVersion', "2023.0.1")
+	set('springCloudVersion', "2024.0.1")
 
     /*
      * 브랜치명이 없거나 main이 아니라면 dev 프로필로 진행
@@ -79,7 +79,6 @@ dependencies {
 	//oauth2
     implementation 'org.springframework.security:spring-security-oauth2-core'
 	implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
-	implementation 'org.springframework.boot:spring-boot-starter-oauth2-resource-server'
 
 	//monitoring
 	implementation 'org.springframework.boot:spring-boot-starter-actuator'
