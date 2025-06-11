@@ -86,6 +86,14 @@ public class SecurityConfig {
         	logout.logoutSuccessHandler(cooltimeServerLogoutSuccessHandler);	// 로그아웃 성공 후 액션
         });
 
+    	http.sessionManagement((sessions) -> sessions
+                .concurrentSessions((concurrency) -> concurrency
+                        .maximumSessions(SessionLimit.of(1))                         // 하나의 세션만 유효
+                        .maximumSessionsExceededHandler(invalidatePreviousRedisSessionHandler)  // 이전 세션 파기 (현재 로그인 유지)
+//                        .maximumSessionsExceededHandler(preventCurrentSessionHandler)         // 현재 세션 파기 (기존 로그인 유지)
+                )
+        );
+	    
         // 세션 관리자 설정
         http.securityContextRepository(new WebSessionServerSecurityContextRepository());
 
