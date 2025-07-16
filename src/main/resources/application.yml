@@ -158,23 +158,6 @@ logging:
       max-history: 15
       
 ###########################################################################
-### Actuator 설정 
-###########################################################################
-management:
-  metrics:
-    tags:
-      application: ${spring.application.name}
-  endpoint:
-    health:
-      probes:
-        enabled: true
-  endpoints:
-    web:
-      base-path: /actuator
-      exposure:
-        include: '*'
-
-###########################################################################
 ### Swagger 설정 
 ###########################################################################
 springdoc:
