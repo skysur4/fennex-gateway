@@ -18,7 +18,6 @@ application:
     host: localhost
     context: 
     port: 3000
-  gateway: http://localhost:8080
 
   # CORS 허용 도메인 #
   cors: 
@@ -38,8 +37,8 @@ spring:
   ### Datasource 설정 ###
   r2dbc:
     url: r2dbc:postgresql://192.168.50.210:5432/home
-    username: chris
-    password: rotoRl12!@
+    username: admin
+    password: admin
     properties:
       schema: public
 
@@ -50,11 +49,12 @@ spring:
       client:
         provider:
           fennex:
-            issuer-uri: "http://192.168.50.210:8040/realms/${spring.application.realm}"
+            issuer-uri: http://192.168.50.210:8040/realms/${spring.application.realm}
+            jwk-set-uri: http://192.168.50.210:8040/realms/${spring.application.realm}/protocol/openid-connect/certs
         registration:
           fennex:
             client-id: dev-client
-            client-secret: VCTAfYrHT1nu2gn5tyw7MWG2V7VuWCOd
+            client-secret: FN9eR0m03Hwza0TanEHDA8Px7pJop5ly
 
     ### 비로그인 백엔드 설정 ###
     access:

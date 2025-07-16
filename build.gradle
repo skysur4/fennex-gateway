@@ -79,12 +79,7 @@ dependencies {
 	//oauth2
     implementation 'org.springframework.security:spring-security-oauth2-core'
 	implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
-
-	//monitoring
-	implementation 'org.springframework.boot:spring-boot-starter-actuator'
-
-	//tracing 추가 설정 필요함
-	//implementation 'org.springframework.cloud:spring-cloud-starter-sleuth'
+	implementation 'org.springframework.boot:spring-boot-starter-oauth2-resource-server'
 
 	//database
 	implementation 'org.springframework.boot:spring-boot-starter-data-r2dbc'

@@ -21,25 +21,24 @@ import reactor.core.publisher.Mono;
 @RestController
 @RequestMapping("/user")
 @RequiredArgsConstructor
-public class UserDetailController {
+public class UserRestController { //extends BaseV1Controller { (현재 사용 안함)
 
 	private final UserDetailService userDetailService;
 
 	@Operation(summary = "상세 조회", description = "상세 조회 API")
-	@GetMapping("/detail")
+	@GetMapping
 	public Mono<ResponseEntity<UserDetail>> getUser(@Parameter(hidden = true) @AuthenticationPrincipal OidcUser oidcUser) throws Exception {
 
 		UserDetail userDetail = new UserDetail();
 		userDetail.setId(oidcUser.getSubject());
-		userDetail.setGivenName(oidcUser.getGivenName());
-		userDetail.setFamilyName(oidcUser.getFamilyName());
-		userDetail.setEmail(oidcUser.getEmail());
-
-		userDetail.setBirthDate("");
-		userDetail.setGender("");
-		userDetail.setNickname("");
-		userDetail.setPhoneNumber("");
-		userDetail.setPhoneNumberVerified("");
+		userDetail.setGivenName(null);
+		userDetail.setFamilyName(null);
+		userDetail.setEmail(null);
+		userDetail.setBirthDate(null);
+		userDetail.setGender(null);
+		userDetail.setNickname(oidcUser.getNickName());
+		userDetail.setPhoneNumber(null);
+		userDetail.setPhoneNumberVerified(null);
 
 		return userDetailService.getOne(userDetail)
 	            .defaultIfEmpty(userDetail)

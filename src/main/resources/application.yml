@@ -9,16 +9,15 @@ application:
   # 인증완료 redirect url #
   frontend:
     scheme: http
-    host: fennex.pro
+    host: nikke.fennex.pro
     context: 
     port: 80
-  gateway: http://api.fennex.pro
 
   # CORS 허용 도메인 #
   cors: 
     allowed-origin:
-    - http://fennex.io
-    - https://fennex.pro
+    - http://nikke.fennex.pro
+    - https://nikke.fennex.pro
 
 ###########################################################################
 ### server 설정 
@@ -41,10 +40,7 @@ server:
 spring:
   application:
     name: fennex-gateway
-    realm: fennex
-
-  profiles:
-    active: local
+    realm: nikke
 
   ### Cloud 설정 ###
   webflux:
@@ -64,19 +60,20 @@ spring:
   ### JPA 설정 ### 
   jpa:
     hibernate:
-      ddl-auto: create # 테이블 유효성 검사
+      ddl-auto: update # 테이블 유효성 검사
       naming.physical-strategy: org.hibernate.boot.model.naming.CamelCaseToUnderscoresNamingStrategy
     properties:
       hibernate:
         show_sql: true
         format_sql: true
         use_sql_comments: true
+        dialect: org.hibernate.dialect.PostgreSQLDialect
 
   ### Datasource 설정 ###
   r2dbc:
     url: r2dbc:postgresql://192.168.50.210:5432/home
-    username: chris
-    password: rotoRl12!@
+    username: admin
+    password: admin
     pool:
       initial-size: 5
       max-size: 5
@@ -112,18 +109,18 @@ spring:
         registration:
           fennex:
             provider: fennex
-            client-id: fennex-client
-            client-secret: fennex-client
-            #: "${application.gateway}/oauth2/code/{registrationId}"
+            client-id: prod-client
+            client-secret: 08iwSGoNxo7afJFFjyw73CFOxOnwXb7Y
             authorization-grant-type: authorization_code
             scope: openid
-
     access:
       free:
       - /favicon.ico
       - /actuator/**
       - /swagger/**
-      - /swagger-ui/**
+      - /*/swagger-ui/**
+      nologin:
+      - /session
 
   ### 메시지 설정 ###
   messages:
@@ -161,31 +158,14 @@ logging:
       max-history: 15
       
 ###########################################################################
-### Actuator 설정 
-###########################################################################
-management:
-  metrics:
-    tags:
-      application: ${spring.application.name}
-  endpoint:
-    health:
-      probes:
-        enabled: true
-  endpoints:
-    web:
-      base-path: /actuator
-      exposure:
-        include: '*'
-
-###########################################################################
 ### Swagger 설정 
 ###########################################################################
 springdoc:
   swagger-ui:
-    use-root-path: true
+    #use-root-path: true
     path: /swagger
-    tags-sorter: alpha
-    operations-sorter: alpha
+    #tags-sorter: alpha
+    #operations-sorter: alpha
   api-docs:
     path: /swagger/docs
     groups:
@@ -196,10 +176,10 @@ springdoc:
     title: Gateway API
     description: Apis for Gateway
     version: 1.0.0
-    terms-of-service: http://fennex.pro/termsofservice
+    terms-of-service: http://nikke.fennex.pro/termsofservice
     contact:
       name: Administrator
-      url: https://fennex.pro
+      url: https://nikke.fennex.pro
       email: admin@fennex.pro
     license:
       name: MIT License

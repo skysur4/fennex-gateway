@@ -8,37 +8,36 @@ import org.springframework.context.annotation.Profile;
 
 import io.cooltime.gateway.properties.SwaggerProperties;
 
-@Profile("!prod")
+@Profile("local")
 @Configuration
 public class SwaggerConfig {
 	@Autowired
 	SwaggerProperties swaggerProperties;
 
-	  @Bean
-	  GroupedOpenApi publicApi() {
-	      return GroupedOpenApi.builder()
-	              .group("public")
-	              .pathsToMatch("/**")
-	              .pathsToExclude("/gateway/**", "/admin/**")
-	              .addOpenApiCustomizer(openApi -> openApi.info(swaggerProperties.getInfo()))
-	              .build();
-	  }
+//	  @Bean
+//	  GroupedOpenApi publicApi() {
+//	      return GroupedOpenApi.builder()
+//	              .group("public")
+//	              .pathsToMatch("/login/**", "/oauth2/**")
+//	              .addOpenApiCustomizer(openApi -> openApi.info(swaggerProperties.getInfo()))
+//	              .build();
+//	  }
 
 	  @Bean
-	  GroupedOpenApi gatewayApi() {
+	  GroupedOpenApi openApiV1() {
 	      return GroupedOpenApi.builder()
-	              .group("gateway")
-	              .pathsToMatch("/gateway/**")
+	              .group("open API V1")
+	              .pathsToMatch("/api/v1/**")
 	              .addOpenApiCustomizer(openApi -> openApi.info(swaggerProperties.getInfo()))
 	              .build();
 	  }
-
-	  @Bean
-	  GroupedOpenApi adminApi() {
-	      return GroupedOpenApi.builder()
-	              .group("admin")
-	              .pathsToMatch("/admin/**")
-	              .addOpenApiCustomizer(openApi -> openApi.info(swaggerProperties.getInfo()))
-	              .build();
-	  }
+//
+//	  @Bean
+//	  GroupedOpenApi adminApi() {
+//	      return GroupedOpenApi.builder()
+//	              .group("admin")
+//	              .pathsToMatch("/admin/**")
+//	              .addOpenApiCustomizer(openApi -> openApi.info(swaggerProperties.getInfo()))
+//	              .build();
+//	  }
 }
