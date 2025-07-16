@@ -8,8 +8,6 @@ import lombok.Setter;
 public class LoginStatus {
 	private boolean status = false;
 	private String id;
-	private String firstName;
-	private String lastName;
-	private String email;
+	private String nickName;
 	private String token;
 }

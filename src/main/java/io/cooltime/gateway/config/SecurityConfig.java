@@ -7,17 +7,21 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
 import org.springframework.security.config.web.server.ServerHttpSecurity;
-import org.springframework.security.oauth2.server.resource.web.access.server.BearerTokenServerAccessDeniedHandler;
 import org.springframework.security.web.server.SecurityWebFilterChain;
+import org.springframework.security.web.server.authentication.logout.WebSessionServerLogoutHandler;
+import org.springframework.security.web.server.authorization.HttpStatusServerAccessDeniedHandler;
 import org.springframework.security.web.server.context.WebSessionServerSecurityContextRepository;
 import org.springframework.security.web.server.header.ReferrerPolicyServerHttpHeadersWriter.ReferrerPolicy;
+import org.springframework.security.web.server.util.matcher.PathPatternParserServerWebExchangeMatcher;
 
 import io.cooltime.gateway.authorization.CooltimeAuthenticationFailureHandler;
 import io.cooltime.gateway.authorization.CooltimeAuthenticationSuccessHandler;
 import io.cooltime.gateway.authorization.CooltimeServerLogoutSuccessHandler;
+import io.cooltime.gateway.exception.ApiServerAuthenticationEntryPoint;
 import io.cooltime.gateway.properties.AccessProperties;
 import lombok.extern.slf4j.Slf4j;
 
@@ -64,13 +68,12 @@ public class SecurityConfig {
         http.formLogin(formLogin -> formLogin.disable());
         http.httpBasic(httpBasic -> httpBasic.disable());
 
-//        http.exceptionHandling(exceptionHandling -> {
-//        	exceptionHandling.authenticationEntryPoint(new RedirectServerAuthenticationEntryPoint(authenticationProperties.getLoginUrl()));	//추후 프런트쪽으로 테스트
-//        });
-
         http.exceptionHandling(exceptionHandling -> {
 //        	exceptionHandling.accessauthenticationEntryPoint(new RedirectServerAuthenticationEntryPoint(authenticationProperties.getLoginUrl()));	//추후 프런트쪽으로 테스트
-        	exceptionHandling.accessDeniedHandler(new BearerTokenServerAccessDeniedHandler());
+//        	exceptionHandling.accessDeniedHandler(new BearerTokenServerAccessDeniedHandler());
+
+        	exceptionHandling.authenticationEntryPoint(new ApiServerAuthenticationEntryPoint());
+        	exceptionHandling.accessDeniedHandler(new HttpStatusServerAccessDeniedHandler(HttpStatus.FORBIDDEN));
         });	// redirect to /error 방지
 
         http.oauth2Login(login -> {
@@ -82,7 +85,8 @@ public class SecurityConfig {
         });
 
         http.logout(logout -> {
-//        	logout.requiresLogout(new PathPatternParserServerWebExchangeMatcher(authenticationProperties.getLogoutUrl()));	// 로그아웃 경로 설정
+        	logout.requiresLogout(new PathPatternParserServerWebExchangeMatcher("/logout"));	// 로그아웃 경로 설정
+        	logout.logoutHandler(new WebSessionServerLogoutHandler());	// 로그아웃
         	logout.logoutSuccessHandler(cooltimeServerLogoutSuccessHandler);	// 로그아웃 성공 후 액션
         });
 
