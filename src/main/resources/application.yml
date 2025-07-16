@@ -176,10 +176,10 @@ springdoc:
     title: Gateway API
     description: Apis for Gateway
     version: 1.0.0
-    terms-of-service: http://fennex.pro/termsofservice
+    terms-of-service: http://nikke.fennex.pro/termsofservice
     contact:
       name: Administrator
-      url: https://fennex.pro
+      url: https://nikke.fennex.pro
       email: admin@fennex.pro
     license:
       name: MIT License

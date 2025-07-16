@@ -8,7 +8,7 @@ import org.springframework.context.annotation.Profile;
 
 import io.cooltime.gateway.properties.SwaggerProperties;
 
-@Profile("!prod")
+@Profile("local")
 @Configuration
 public class SwaggerConfig {
 	@Autowired
