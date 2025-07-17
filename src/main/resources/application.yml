@@ -102,7 +102,11 @@ spring:
     oauth2:
       client:
         provider:
-          fennex:
+          keycloak:
+            issuer-uri: https://kc.fennex.pro/realms/${spring.application.realm}
+            jwk-set-uri: https://kc.fennex.pro/realms/${spring.application.realm}/protocol/openid-connect/certs
+            user-name-attribute: sub
+          pocket:
             issuer-uri: https://pocket.fennex.pro
             authorization-uri: https://pocket.fennex.pro/authorize
             token-uri: https://pocket.fennex.pro/api/oidc/token
@@ -110,21 +114,27 @@ spring:
             jwk-set-uri: https://pocket.fennex.pro/.well-known/jwks.json
             user-name-attribute: sub
         registration:
-          fennex:
-            provider: fennex
-            client-id: 27bd62c8-a2c3-4c8d-81ff-cdbca2f7ef50
-            client-secret: 1ZzAWiHNIfE8xji9YEwNXBugUm6BPNG1
-            redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
+          keycloak:
+            provider: keycloak
+            client-id: prod-client
+            client-secret: 08iwSGoNxo7afJFFjyw73CFOxOnwXb7Y
             authorization-grant-type: authorization_code
             scope: openid
+            redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
+          pocket:
+            provider: pocket
+            client-id: 27bd62c8-a2c3-4c8d-81ff-cdbca2f7ef50
+            client-secret: 1ZzAWiHNIfE8xji9YEwNXBugUm6BPNG1
+            authorization-grant-type: authorization_code
+            scope: openid
+            redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
     access:
       free:
+      - /session
       - /favicon.ico
       - /actuator/**
       - /swagger/**
       - /*/swagger-ui/**
-      nologin:
-      - /session
 
   ### 메시지 설정 ###
   messages:

@@ -47,12 +47,15 @@ spring:
     ### OIDC 연동 설정 ###
     oauth2:
       client:
-        #provider:
-        #  fennex:
-        #    issuer-uri: http://192.168.50.210:8040/realms/${spring.application.realm}
-        #    jwk-set-uri: http://192.168.50.210:8040/realms/${spring.application.realm}/protocol/openid-connect/certs
+        provider:
+          keycloak:
+            issuer-uri: http://192.168.50.210:8040/realms/${spring.application.realm}
+            jwk-set-uri: http://192.168.50.210:8040/realms/${spring.application.realm}/protocol/openid-connect/certs
         registration:
-          fennex:
+          keycloak:
+            client-id: dev-client
+            client-secret: FN9eR0m03Hwza0TanEHDA8Px7pJop5ly
+          pocket:
             client-id: 12f5b498-188f-4ddc-8d18-26ce615767d0
             client-secret: ZekqRjJ7mgInJgYnBlGgOYoTnFcqZS3Z
 

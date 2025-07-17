@@ -74,7 +74,7 @@ public class ScoreRestController extends BaseV1Controller {
 	@DeleteMapping
     public Mono<ResponseEntity<Void>> remove(@Parameter(hidden = true) @AuthenticationPrincipal OidcUser oidcUser) throws Exception {
 		return scoreService.remove(oidcUser.getSubject())
-		.map(ResponseEntity::ok);
+				.map(ResponseEntity::ok);
     }
 }
 

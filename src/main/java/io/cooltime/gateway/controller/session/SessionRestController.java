@@ -1,5 +1,7 @@
 package io.cooltime.gateway.controller.session;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.ReactiveSecurityContextHolder;
 import org.springframework.security.oauth2.core.oidc.user.OidcUser;
@@ -19,21 +21,27 @@ public class SessionRestController {
 	private final boolean isLocal;
 
 	@GetMapping
-	public Mono<LoginStatus> session () {
+	public Mono<ResponseEntity<LoginStatus>> session () {
 		 return ReactiveSecurityContextHolder.getContext()
                 .map(ctx -> {
                 	Authentication authentication = ctx.getAuthentication();
-                	LoginStatus loginInfo = new LoginStatus();
-        			loginInfo.setStatus(authentication.isAuthenticated());
-        			OidcUser oidcUser = (OidcUser) authentication.getPrincipal();
-        			loginInfo.setId(oidcUser.getPreferredUsername().trim());
-        			loginInfo.setNickName(oidcUser.getNickName().trim());
+                	if(authentication.isAuthenticated()) {
+                    	LoginStatus loginInfo = new LoginStatus();
+            			loginInfo.setStatus(authentication.isAuthenticated());
+            			OidcUser oidcUser = (OidcUser) authentication.getPrincipal();
+            			loginInfo.setId(oidcUser.getSubject().trim());
+            			loginInfo.setNickName(oidcUser.getNickName().trim());
 
-        	        if(isLocal) {
-        	        	loginInfo.setToken(oidcUser.getIdToken().getTokenValue());
-        	    	}
+            	        if(isLocal) {
+            	        	loginInfo.setToken(oidcUser.getIdToken().getTokenValue());
+            	    	}
 
-        	        return loginInfo;
-                });
+            	        return ResponseEntity.ok(loginInfo);
+                	}
+        	        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new LoginStatus());
+
+                }).log()
+                .onErrorReturn(ResponseEntity.ok(new LoginStatus()))
+                ;
 	}
 }
