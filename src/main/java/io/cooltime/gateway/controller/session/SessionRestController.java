@@ -11,8 +11,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import io.cooltime.gateway.common.model.LoginStatus;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import reactor.core.publisher.Mono;
 
+@Slf4j
 @RestController
 @RequestMapping("/session")
 @RequiredArgsConstructor
@@ -36,12 +38,12 @@ public class SessionRestController {
             	        	loginInfo.setToken(oidcUser.getIdToken().getTokenValue());
             	    	}
 
+            	        log.info("loginInfo: {}", loginInfo);
             	        return ResponseEntity.ok(loginInfo);
                 	}
         	        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new LoginStatus());
 
-                }).log()
-                .onErrorReturn(ResponseEntity.ok(new LoginStatus()))
+                }).onErrorReturn(ResponseEntity.ok(new LoginStatus()))
                 ;
 	}
 }
