@@ -28,17 +28,17 @@ public class SessionRestController {
                 .map(ctx -> {
                 	Authentication authentication = ctx.getAuthentication();
                 	if(authentication.isAuthenticated()) {
+                		OidcUser oidcUser = (OidcUser) authentication.getPrincipal();
+            			log.info("oidcUser: {}", oidcUser);
+
                     	LoginStatus loginInfo = new LoginStatus();
             			loginInfo.setStatus(authentication.isAuthenticated());
-            			OidcUser oidcUser = (OidcUser) authentication.getPrincipal();
             			loginInfo.setId(oidcUser.getSubject().trim());
             			loginInfo.setNickName(oidcUser.getNickName().trim());
 
             	        if(isLocal) {
             	        	loginInfo.setToken(oidcUser.getIdToken().getTokenValue());
             	    	}
-
-            	        log.info("loginInfo: {}", loginInfo);
             	        return ResponseEntity.ok(loginInfo);
                 	}
         	        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new LoginStatus());
