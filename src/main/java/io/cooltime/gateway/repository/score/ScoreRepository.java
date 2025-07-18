@@ -9,6 +9,8 @@ import reactor.core.publisher.Flux;
 
 @Repository
 public interface ScoreRepository extends R2dbcRepository<Score, String> {
-	Flux<Score> findAllByNicknameContaining(String nickname);
+	Flux<Score> findAllByNicknameContaining(String postfix);
+
+	Flux<Score> findAllByNicknameNotContaining(String postfix1, String postfix2);
 }
 

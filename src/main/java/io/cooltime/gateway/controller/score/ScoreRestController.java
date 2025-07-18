@@ -50,17 +50,8 @@ public class ScoreRestController extends BaseV1Controller {
 	@Operation(summary = "목록 조회", description = "목록 조회 API")
 	@GetMapping
 	public Mono<ResponseEntity<List<Score>>> list(@Parameter(hidden = true) @AuthenticationPrincipal OidcUser oidcUser) throws Exception {
-		String nickname = oidcUser.getNickName().trim();
-		String condition = nickname.replaceAll("[^♧◆]", "");
-
-		if(condition.isBlank()) {
-			return scoreService.list()
-		            .map(ResponseEntity::ok);
-		} else {
-			return scoreService.list(condition)
-		            .map(ResponseEntity::ok);
-		}
-
+		return scoreService.list()
+	            .map(ResponseEntity::ok);
     }
 
 	@Operation(summary = "상세 조회", description = "상세 조회 API")

@@ -51,7 +51,7 @@ public class CooltimeAuthenticationSuccessHandler extends RedirectServerAuthenti
             OidcUserInfo userInfo = user.getUserInfo();
             Collection<? extends GrantedAuthority> authorities = user.getAuthorities();
 
-            log.info("### Saving user info [{}] to session {} ###", userInfo.getEmail(), session.getId());
+            log.info("### Saving user info [{}] to session {} ###", userInfo, session.getId());
 
             session.getAttributes().put("USER", userInfo);
             session.getAttributes().put("AUTHORITY", authorities);

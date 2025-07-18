@@ -25,8 +25,8 @@ public class ScoreService {
 	       return scoreRepository.findAll().collectList();
 	}
 
-	public Mono<List<Score>> list(String nickname) {
-	       return scoreRepository.findAllByNicknameContaining(nickname).collectList();
+	public Mono<List<Score>> list(String postfix) {
+       return scoreRepository.findAllByNicknameContaining(postfix).collectList();
 	}
 
 	public Mono<Score> save(Score score) {
