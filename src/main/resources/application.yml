@@ -16,7 +16,6 @@ application:
   # CORS 허용 도메인 #
   cors: 
     allowed-origin:
-    - http://nikke.fennex.pro
     - https://nikke.fennex.pro
 
 ###########################################################################
