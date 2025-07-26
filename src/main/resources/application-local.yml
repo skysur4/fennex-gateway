@@ -1,0 +1,108 @@
+###########################################################################
+# 로컬 설정
+###########################################################################
+
+###########################################################################
+### server 설정 
+###########################################################################
+server:
+  port: 8080
+
+###########################################################################
+### Application 설정 
+###########################################################################
+application:
+  # 인증완료 redirect url #
+  frontend:
+    scheme: http
+    host: localhost
+    context: 
+    port: 3000
+
+  # CORS 허용 도메인 #
+  cors: 
+    allowed-origin:
+    - http://localhost:3000
+
+###########################################################################
+### Spring 설정 
+###########################################################################
+spring:
+  ### Redis 설정 ###
+  data:
+    redis:
+      host: 192.168.50.210
+      port: 6379
+
+  ### Datasource 설정 ###
+  r2dbc:
+    url: r2dbc:postgresql://192.168.50.210:5432/home
+    username: admin
+    password: admin
+    properties:
+      schema: public
+
+  ### 보안 설정 ###
+  security:
+    ### OIDC 연동 설정 ###
+    oauth2:
+      client:
+        provider:
+          keycloak:
+            issuer-uri: http://192.168.50.210:8040/realms/${spring.application.realm}
+            jwk-set-uri: http://192.168.50.210:8040/realms/${spring.application.realm}/protocol/openid-connect/certs
+        registration:
+          keycloak:
+            client-id: ENC(P7Jnh9a1LWH7yezI7+AlS6FvFRR98OIgnFlEDiN4lfZzRncXJ9xI3oRZKxpAc09w)
+            client-secret: ENC(07u0/ykR4x1KDvoiRtblCgan3xgtuDH87xKuTzH+72UgEOudnHDfAdElePOepdFjDLI9HPysBxEQffh8htmv0eZ2O4wOwmvbmozc8qVt0jI=)
+          pocket:
+            client-id: ENC(0w9jjC6sv/yRORSfPD62V6ouZWLHns7aguw+2XCm0UMsOVv1yIl4QDCMEEoCILqJm8ew8BbQn194syZ6s49zfdn9OSivF7k/9LfiHLUDAXg=)
+            client-secret: ENC(jMeKYqRAvQdyoK03lgqiFI1iC3hVo4rn3kYGugHsclWRz3Ouv8kJ/Cl8L8JTSTaXbBNtJFg/Y1Va3HlV5BDT2iPfl8alyFi4Sk0GroA1SN4=)
+
+    ### 비로그인 백엔드 설정 ###
+    access:
+      nologin:
+      - /translate/**
+
+###########################################################################
+### Router data 설정 
+###########################################################################
+routers:
+  defaults:
+    translate:
+      context: translate
+      scheme: http
+      host: localhost
+      port: 9090
+    template:
+      context: template
+      scheme: http
+      host: localhost
+      port: 9090
+    movie:
+      context: movie
+      scheme: http
+      host: localhost
+      port: 9090
+
+###########################################################################
+### Logging 설정 
+###########################################################################
+logging:
+  level:
+    root: info
+    lombok: info
+    org:
+      apache: info
+      kafka: info
+      postgresql: trace
+      springframework: debug
+    com:
+      ulisesbocchio: debug
+      cloud: 
+        cloud: info
+    io:        
+      r2dbc: 
+        postgresql: 
+          QUERY: debug # for queries
+          PARAM: debug # for parameters    

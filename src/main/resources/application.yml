@@ -1,0 +1,208 @@
+###########################################################################
+### 기본 설정 
+###########################################################################
+
+###########################################################################
+### Application 설정 
+###########################################################################
+application:
+  # 인증완료 redirect url #
+  frontend:
+    scheme: http
+    host: nikke.fennex.pro
+    context: 
+    port: 80
+
+  # CORS 허용 도메인 #
+  cors: 
+    allowed-origin:
+    - http://nikke.fennex.pro
+    - https://nikke.fennex.pro
+
+###########################################################################
+### server 설정 
+###########################################################################
+server:
+  port: 8080
+  servlet:
+    session:
+      cookie:
+        http-only: true
+        secure: true
+        same-site: lax
+  error:
+    whitelabel:
+      enabled: false
+
+###########################################################################
+### Spring 설정 
+###########################################################################
+spring:
+  application:
+    name: fennex-gateway
+    realm: nikke
+
+  ### Cloud 설정 ###
+  webflux:
+    base-path: 
+  cloud:
+    gateway:
+      filter:
+        retry:
+          enabled: false
+
+  ### Redis 설정 ###
+  data:
+    redis:
+      host: 192.168.50.210
+      port: 6379
+
+  ### JPA 설정 ### 
+  jpa:
+    hibernate:
+      ddl-auto: update # 테이블 유효성 검사
+      naming.physical-strategy: org.hibernate.boot.model.naming.CamelCaseToUnderscoresNamingStrategy
+    properties:
+      hibernate:
+        show_sql: true
+        format_sql: true
+        use_sql_comments: true
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+
+  ### Datasource 설정 ###
+  r2dbc:
+    url: r2dbc:postgresql://192.168.50.210:5432/home
+    username: ENC(cKVHDegwD6EoNZfVrirNTJkU5o69mQJOqxvk61vNxbMD0dLJJqbFKRo99pqnoehE)
+    password: ENC(7npCP8HJd5zNz8r4+R3iGIYXqwfqzJEe4zpLW1isPbVK266GqQRlHt2k6HpPsGL7)
+    pool:
+      initial-size: 5
+      max-size: 5
+      max-create-connection-time: 60000
+      validation-depth: local
+      validation-query: select 1
+    properties:
+      schema: public
+
+  ### 웹 설정 ###
+  web:
+    resources:
+      add-mappings: true
+  sql:
+    init:
+      mode: never
+      continue-on-error: true
+  session:
+    redis:
+      flush-mode: immediate
+      save-mode: on-set-attribute
+
+  ### 보안 설정 ###
+  security:
+    ### OIDC 연동 설정 ###
+    oauth2:
+      client:
+        provider:
+          keycloak:
+            issuer-uri: https://kc.fennex.pro/realms/${spring.application.realm}
+            jwk-set-uri: https://kc.fennex.pro/realms/${spring.application.realm}/protocol/openid-connect/certs
+            user-name-attribute: sub
+          pocket:
+            issuer-uri: https://pocket.fennex.pro
+            authorization-uri: https://pocket.fennex.pro/authorize
+            token-uri: https://pocket.fennex.pro/api/oidc/token
+            user-info-uri: https://pocket.fennex.pro/api/oidc/userinfo
+            jwk-set-uri: https://pocket.fennex.pro/.well-known/jwks.json
+            user-name-attribute: sub
+        registration:
+          keycloak:
+            provider: keycloak
+            client-id: ENC(7arL0mw3Sj/peLp8SaRWh0UCIz7EPW3IezeKLEEbieICfaHOI5OvZgQXoYog2EVr)
+            client-secret: ENC(HTStSGuzAloHuv+Rogw4J2N+htymIqpKo5Dj1rACb7tRtlcBqoXcDGxn9ydtvVpQO3nZCkqqjLadlOvqW62Ln3mE1iFLVV4UPgnX2SXIFH4=)
+            authorization-grant-type: authorization_code
+            scope: openid
+            redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
+          pocket:
+            provider: pocket
+            client-id: ENC(ASF6Qj50FClcNhoQE1WvM/4Jk+pAt36kskiMo/lCSHNyLLTWR0CDQXB/kibUBK7fNMhK+TuxnRgdEOncCipfHpl+pXVLjNl2VnI0e0leffU=)
+            client-secret: ENC(/uGrbogvKKjQkH/9WrrpmyfEvkdrqk0Nvnmwcrj/QAyEobPZESCPcEkypbJe47lug0+ci86IQ6AV6npnYP3OlxszQr620IWwhSe0Ig44zhI=)
+            authorization-grant-type: authorization_code
+            scope: openid
+            redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
+    access:
+      free:
+      - /session
+      - /favicon.ico
+      - /actuator/**
+      - /swagger/**
+      - /*/swagger-ui/**
+
+  ### 메시지 설정 ###
+  messages:
+    basename: messages/messages,
+              messages/error-messages,
+###########################################################################
+### Logging 설정 
+###########################################################################
+logging:
+  level:
+    root: info
+  file: 
+    name: app/logs/${hostname}/${spring.application.name}.log
+  pattern:
+    console: "%d{HH:mm:ss.SSS} %clr(${LOG_LEVEL_PATTERN:-%5p}) %-10logger{0} %msg%n"
+    file: "%d{HH:mm:ss.SSS} %-5level %-10logger{0} %msg%n"
+  logback:
+    rollingpolicy: 
+      file-name-pattern: app/logs/${hostname}/${spring.application.name}.%d{yyyy-MM-dd}.%i.gz
+      max-file-size: 100MB
+      max-history: 15
+      
+###########################################################################
+### Swagger 설정 
+###########################################################################
+springdoc:
+  swagger-ui:
+    #use-root-path: true
+    path: /swagger
+    #tags-sorter: alpha
+    #operations-sorter: alpha
+  api-docs:
+    path: /swagger/docs
+    groups:
+      enabled: true
+  cache:
+    disabled: true
+  api-info:
+    title: Gateway API
+    description: Apis for Gateway
+    version: 1.0.0
+    terms-of-service: http://nikke.fennex.pro/termsofservice
+    contact:
+      name: Administrator
+      url: https://nikke.fennex.pro
+      email: admin@fennex.pro
+    license:
+      name: MIT License
+      url: https://fennex.pro/license
+
+###########################################################################
+### Router data 설정 
+###########################################################################
+routers:
+  defaults:
+    description:
+      context: description # 라우팅 소스 컨텍스트
+      scheme: http # 라우팅 대상 스키마
+      host: localhost # 라우팅 대상 주소 (ip/domain)
+      port: 8080 # 라우팅 대상 포트
+      prefix: test # 라우팅 대상 path의 맨 앞에 추가되는 path
+      rewrite: explain/v1 # 라우팅 대상 컨텍스트
+      remove-context: false # 컨텍스트 제거, true일 경우 prefix와 rewrite 무시
+      skip-filters: true # 라우팅 필터 적용 유무, true일 경우 모든 GatewayFilter를 우회
+
+###########################################################################
+### Jasypt 설정 
+###########################################################################
+jasypt:
+  encryptor:
+    password: ${ENCRYPTOR_PROFILE}
