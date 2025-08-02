@@ -73,7 +73,7 @@ public class ScoreRestController extends BaseV1Controller {
 	}
 
 	private String getUnionName(String nickName){
-		String postfix = nickName.replace("[^◆♧]", "");
+		String postfix = nickName.replaceAll("[^◆♧]", "");
 
 		String union = "";
 		if("◆".equals(postfix)){
