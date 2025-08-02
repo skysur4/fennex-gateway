@@ -25,6 +25,10 @@ public class Score implements Persistable<String> {
 
 	private String nickname; // 닉네임",
 
+	private String unionName; // 유니온 이름",
+
+	private int level = 1;
+
 	private long boss1; // 1보스 99856279200
 
 	private long boss2; // 2보스 99856279200

@@ -35,12 +35,7 @@ public class ScoreRestController extends BaseV1Controller {
     public Mono<ResponseEntity<Score>> save(@RequestBody Score score, @Parameter(hidden = true) @AuthenticationPrincipal OidcUser oidcUser) throws Exception {
     	score.setUserId(oidcUser.getSubject().trim());
 		score.setNickname(oidcUser.getNickName().trim());
-
-//        return scoreService.insert(score)
-//        		.onErrorResume(e -> {
-//        			return scoreService.update(score);
-//        		})
-//        		.map(ResponseEntity::ok);
+		score.setUnionName(getUnionName(oidcUser.getNickName()));
 
 		return scoreService.save(score)
 				.map(ResponseEntity::ok);
@@ -67,6 +62,30 @@ public class ScoreRestController extends BaseV1Controller {
 		return scoreService.remove(oidcUser.getSubject())
 				.map(ResponseEntity::ok);
     }
+
+	@Operation(summary = "모두삭제", description = "모두삭제 API")
+	@DeleteMapping("/reset")
+	public Mono<ResponseEntity<Void>> removeAll(@Parameter(hidden = true) @AuthenticationPrincipal OidcUser oidcUser) throws Exception {
+		String union = getUnionName(oidcUser.getNickName());
+
+		return scoreService.removeAll(union)
+				.map(ResponseEntity::ok);
+	}
+
+	private String getUnionName(String nickName){
+		String postfix = nickName.replace("[^◆♧]", "");
+
+		String union = "";
+		if("◆".equals(postfix)){
+			union = "senior";
+		} else if("♧".equals(postfix)){
+			union = "junior";
+		} else {
+			union = "expert";
+		}
+
+		return union;
+	}
 }
 
 

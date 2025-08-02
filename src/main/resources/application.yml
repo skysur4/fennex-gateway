@@ -56,18 +56,6 @@ spring:
       host: 192.168.50.210
       port: 6379
 
-  ### JPA 설정 ### 
-  jpa:
-    hibernate:
-      ddl-auto: update # 테이블 유효성 검사
-      naming.physical-strategy: org.hibernate.boot.model.naming.CamelCaseToUnderscoresNamingStrategy
-    properties:
-      hibernate:
-        show_sql: true
-        format_sql: true
-        use_sql_comments: true
-        dialect: org.hibernate.dialect.PostgreSQLDialect
-
   ### Datasource 설정 ###
   r2dbc:
     url: r2dbc:postgresql://192.168.50.210:5432/home
