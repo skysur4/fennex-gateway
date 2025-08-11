@@ -1,15 +1,12 @@
 package pro.fennex.gateway.service.score;
 
-import java.util.List;
-
-import com.google.common.collect.Lists;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-
 import pro.fennex.gateway.entity.score.Score;
 import pro.fennex.gateway.repository.score.ScoreRepository;
-import lombok.RequiredArgsConstructor;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -17,24 +14,24 @@ public class ScoreService {
 
 	private final ScoreRepository scoreRepository;
 
-	public Mono<Score> get(String userId) {
-	       return scoreRepository.findById(userId);
+	public Mono<Score> get(String userId, String level, String index) {
+	       return scoreRepository.findByIdAndLevelAndIndex(userId, level, index);
 	}
 
 	public Mono<List<Score>> list() {
 	       return scoreRepository.findAll().collectList();
 	}
 
-	public Mono<List<Score>> list(String union) {
-       return scoreRepository.findAllByUnionName(union).collectList();
+	public Mono<List<Score>> listByLevel(String level) {
+       return scoreRepository.findAllByLevel(level).collectList();
 	}
 
 	public Mono<Score> save(Score score) {
     	return scoreRepository.save(score);
 	}
 
-	public Mono<Void> remove(String userId) {
-		return scoreRepository.deleteById(userId);
+	public Mono<Void> remove(String userId, String level, String index) {
+		return scoreRepository.deleteByIdAndLevelAndIndex(userId, level, index);
 	}
 
 	public Mono<Void> removeAll(String union) {

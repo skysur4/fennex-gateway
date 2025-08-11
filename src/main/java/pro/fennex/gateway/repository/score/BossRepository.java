@@ -4,6 +4,7 @@ import org.springframework.data.r2dbc.repository.R2dbcRepository;
 import org.springframework.stereotype.Repository;
 
 import pro.fennex.gateway.entity.score.Boss;
+import reactor.core.publisher.Mono;
 
 
 @Repository

@@ -3,14 +3,15 @@ package pro.fennex.gateway.entity.score;
 
 import java.time.LocalDateTime;
 
-import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.domain.Persistable;
-import org.springframework.data.relational.core.mapping.Table;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -21,7 +22,8 @@ import lombok.Setter;
 public class Boss implements Persistable<String> {
 
 	@Id
-	private String level; // 레벨",
+	@Size(max = 1)
+	private String level; // 레벨
 
 	private String name1; // 이름1
 

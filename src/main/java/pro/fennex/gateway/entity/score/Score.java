@@ -3,14 +3,15 @@ package pro.fennex.gateway.entity.score;
 
 import java.time.LocalDateTime;
 
-import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.domain.Persistable;
-import org.springframework.data.relational.core.mapping.Table;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -21,13 +22,19 @@ import lombok.Setter;
 public class Score implements Persistable<String> {
 
 	@Id
-	private String userId; // 사용자 아이디",
+	private String userId; // 사용자 아이디
 
-	private String nickname; // 닉네임",
+	@Id
+	@Size(max = 1)
+	private String level;	// 보스 레벨
 
-	private String unionName; // 유니온 이름",
+	@Id
+	@Size(max = 1)
+	private String index;	// 회차
 
-	private int level = 1;
+	private String nickname; // 닉네임
+
+	private String unionName; // 유니온 이름
 
 	private long boss1; // 1보스 99856279200
 
@@ -48,6 +55,9 @@ public class Score implements Persistable<String> {
 	private String deck4; // 4덱
 
 	private String deck5; // 5덱
+
+	@Size(max = 2000)
+	private String memo; // 메모
 
 	@LastModifiedDate
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")

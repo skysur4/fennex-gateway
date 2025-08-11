@@ -20,12 +20,12 @@ public class BossService {
 	       return bossRepository.findById(level);
 	}
 
-	public Mono<List<Boss>> list() {
-	       return bossRepository.findAll().collectList();
-	}
-
 	public Mono<Boss> save(Boss score) {
     	return bossRepository.save(score);
+	}
+
+	public Mono<Void> removeAtLevel(String level) {
+		return bossRepository.deleteById(level);
 	}
 
 	public Mono<Void> removeAll() {

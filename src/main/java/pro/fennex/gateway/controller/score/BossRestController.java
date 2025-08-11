@@ -28,18 +28,11 @@ public class BossRestController extends BaseV1Controller {
 	private final BossService bossService;
 
 	@Operation(summary = "등록/수정", description = "등록/수정 API")
-	@PostMapping
-    public Mono<ResponseEntity<Boss>> save(@RequestBody Boss boss) throws Exception {
+	@PostMapping("/{level}")
+    public Mono<ResponseEntity<Boss>> save(@RequestBody Boss boss, @PathVariable("level") String level) throws Exception {
+		boss.setLevel(level);
 		return bossService.save(boss)
 				.map(ResponseEntity::ok);
-
-    }
-
-	@Operation(summary = "목록 조회", description = "목록 조회 API")
-	@GetMapping
-	public Mono<ResponseEntity<List<Boss>>> list() throws Exception {
-		return bossService.list()
-	            .map(ResponseEntity::ok);
 
     }
 
@@ -50,12 +43,20 @@ public class BossRestController extends BaseV1Controller {
 	            .map(ResponseEntity::ok);
     }
 
+	@Operation(summary = "레벨 삭제", description = "레벨 삭제 API")
+	@DeleteMapping("/{level}")
+	public Mono<ResponseEntity<Void>> remove(@PathVariable("level") String level) throws Exception {
+		return bossService.removeAtLevel(level)
+				.map(ResponseEntity::ok);
+	}
+
 	@Operation(summary = "삭제", description = "삭제 API")
 	@DeleteMapping
     public Mono<ResponseEntity<Void>> remove() throws Exception {
 		return bossService.removeAll()
 				.map(ResponseEntity::ok);
     }
+
 }
 
 

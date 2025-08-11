@@ -31,11 +31,18 @@ public class ScoreRestController extends BaseV1Controller {
 	private final ScoreService scoreService;
 
 	@Operation(summary = "등록/수정", description = "등록/수정 API")
-	@PostMapping
-    public Mono<ResponseEntity<Score>> save(@RequestBody Score score, @Parameter(hidden = true) @AuthenticationPrincipal OidcUser oidcUser) throws Exception {
+	@PostMapping("/{level}/{index}")
+    public Mono<ResponseEntity<Score>> save(
+			@Parameter(hidden = true) @AuthenticationPrincipal OidcUser oidcUser
+			, @RequestBody Score score
+			, @PathVariable("level") String level
+			, @PathVariable("index") String index) throws Exception {
     	score.setUserId(oidcUser.getSubject().trim());
 		score.setNickname(oidcUser.getNickName().trim());
 		score.setUnionName(getUnionName(oidcUser.getNickName()));
+
+		score.setLevel(level);
+		score.setIndex(index);
 
 		return scoreService.save(score)
 				.map(ResponseEntity::ok);
@@ -43,23 +50,29 @@ public class ScoreRestController extends BaseV1Controller {
     }
 
 	@Operation(summary = "목록 조회", description = "목록 조회 API")
-	@GetMapping
-	public Mono<ResponseEntity<List<Score>>> list(@Parameter(hidden = true) @AuthenticationPrincipal OidcUser oidcUser) throws Exception {
-		return scoreService.list()
+	@GetMapping("/{level}")
+	public Mono<ResponseEntity<List<Score>>> list(@PathVariable("level") String level) throws Exception {
+		return scoreService.listByLevel(level)
 	            .map(ResponseEntity::ok);
     }
 
 	@Operation(summary = "상세 조회", description = "상세 조회 API")
-	@GetMapping("/{userId}")
-	public Mono<ResponseEntity<Score>> get(@PathVariable("userId") String userId, @Parameter(hidden = true) @AuthenticationPrincipal OidcUser oidcUser) throws Exception {
-		return scoreService.get(oidcUser.getSubject())
+	@GetMapping("/{level}/{index}")
+	public Mono<ResponseEntity<Score>> get(
+			@Parameter(hidden = true) @AuthenticationPrincipal OidcUser oidcUser
+			, @PathVariable("level") String level
+			, @PathVariable("index") String index) throws Exception {
+		return scoreService.get(oidcUser.getSubject(), level, index)
 	            .map(ResponseEntity::ok);
     }
 
 	@Operation(summary = "삭제", description = "삭제 API")
-	@DeleteMapping
-    public Mono<ResponseEntity<Void>> remove(@Parameter(hidden = true) @AuthenticationPrincipal OidcUser oidcUser) throws Exception {
-		return scoreService.remove(oidcUser.getSubject())
+	@DeleteMapping("/{level}/{index}")
+    public Mono<ResponseEntity<Void>> remove(
+			@Parameter(hidden = true) @AuthenticationPrincipal OidcUser oidcUser
+			, @PathVariable("level") String level
+			, @PathVariable("index") String index) throws Exception {
+		return scoreService.remove(oidcUser.getSubject(), level, index)
 				.map(ResponseEntity::ok);
     }
 
@@ -70,21 +83,6 @@ public class ScoreRestController extends BaseV1Controller {
 
 		return scoreService.removeAll(union)
 				.map(ResponseEntity::ok);
-	}
-
-	private String getUnionName(String nickName){
-		String postfix = nickName.replaceAll("[^◆♧]", "");
-
-		String union = "";
-		if("◆".equals(postfix)){
-			union = "senior";
-		} else if("♧".equals(postfix)){
-			union = "junior";
-		} else {
-			union = "expert";
-		}
-
-		return union;
 	}
 }
 
