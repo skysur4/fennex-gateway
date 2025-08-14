@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/v1")
 public abstract class BaseV1Controller extends BaseController{
-    protected String getUnionName(String nickName){
+    public static String getUnionName(String nickName){
         String postfix = nickName.replaceAll("[^◆♧]", "");
 
         String union = "";

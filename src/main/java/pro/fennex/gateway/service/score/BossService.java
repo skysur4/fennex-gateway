@@ -15,7 +15,6 @@ public class BossService {
 
 	private final BossRepository bossRepository;
 
-
 	public Mono<Boss> get(String level) {
 	       return bossRepository.findById(level);
 	}

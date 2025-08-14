@@ -15,11 +15,15 @@ public class MembersService {
 	private final MembersRepository membersRepository;
 
 	public Mono<List<Members>> list() {
-	       return membersRepository.findAll().collectList();
+	       return membersRepository.findAllMembers().collectList();
 	}
 
-	public Mono<Members> save(Members score) {
-    	return membersRepository.save(score);
+	public Mono<Void> saveAuto() {
+		return membersRepository.saveAuto();
+	}
+
+	public Mono<Members> save(Members member) {
+    	return membersRepository.save(member);
 	}
 
 	public Mono<Void> remove(String nickname) {

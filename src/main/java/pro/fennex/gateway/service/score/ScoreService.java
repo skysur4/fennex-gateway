@@ -15,7 +15,7 @@ public class ScoreService {
 	private final ScoreRepository scoreRepository;
 
 	public Mono<Score> get(String userId, String level, String index) {
-	       return scoreRepository.findByIdAndLevelAndIndex(userId, level, index);
+	       return scoreRepository.findByUserIdAndLevelAndIndex(userId, level, index);
 	}
 
 	public Mono<List<Score>> list() {
@@ -31,7 +31,7 @@ public class ScoreService {
 	}
 
 	public Mono<Void> remove(String userId, String level, String index) {
-		return scoreRepository.deleteByIdAndLevelAndIndex(userId, level, index);
+		return scoreRepository.deleteByUserIdAndLevelAndIndex(userId, level, index);
 	}
 
 	public Mono<Void> removeAll(String union) {

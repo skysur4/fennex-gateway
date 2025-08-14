@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.core.oidc.user.OidcUser;
+import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -15,11 +16,13 @@ import org.springframework.web.bind.annotation.RestController;
 
 import pro.fennex.gateway.common.controller.BaseV1Controller;
 import pro.fennex.gateway.entity.score.Score;
+import pro.fennex.gateway.entity.user.Members;
 import pro.fennex.gateway.service.score.ScoreService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import pro.fennex.gateway.service.user.MembersService;
 import reactor.core.publisher.Mono;
 
 @Tag(name = "점수 관리 API", description = "점수 CRUD")
@@ -30,23 +33,17 @@ public class ScoreRestController extends BaseV1Controller {
 
 	private final ScoreService scoreService;
 
+	private final MembersService membersService;
+
 	@Operation(summary = "등록/수정", description = "등록/수정 API")
-	@PostMapping("/{level}/{index}")
-    public Mono<ResponseEntity<Score>> save(
-			@Parameter(hidden = true) @AuthenticationPrincipal OidcUser oidcUser
-			, @RequestBody Score score
-			, @PathVariable("level") String level
-			, @PathVariable("index") String index) throws Exception {
+	@PostMapping
+    public Mono<ResponseEntity<Score>> save(@Parameter(hidden = true) @AuthenticationPrincipal OidcUser oidcUser, @RequestBody Score score) throws Exception {
     	score.setUserId(oidcUser.getSubject().trim());
 		score.setNickname(oidcUser.getNickName().trim());
 		score.setUnionName(getUnionName(oidcUser.getNickName()));
 
-		score.setLevel(level);
-		score.setIndex(index);
-
 		return scoreService.save(score)
 				.map(ResponseEntity::ok);
-
     }
 
 	@Operation(summary = "목록 조회", description = "목록 조회 API")

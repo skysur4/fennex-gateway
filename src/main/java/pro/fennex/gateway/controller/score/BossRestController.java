@@ -1,22 +1,13 @@
 package pro.fennex.gateway.controller.score;
 
-import java.util.List;
-
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
-import pro.fennex.gateway.common.controller.BaseV1Controller;
-import pro.fennex.gateway.entity.score.Boss;
-import pro.fennex.gateway.service.score.BossService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import pro.fennex.gateway.common.controller.BaseV1Controller;
+import pro.fennex.gateway.entity.score.Boss;
+import pro.fennex.gateway.service.score.BossService;
 import reactor.core.publisher.Mono;
 
 @Tag(name = "보스 관리 API", description = "보스 CRUD")
@@ -28,9 +19,8 @@ public class BossRestController extends BaseV1Controller {
 	private final BossService bossService;
 
 	@Operation(summary = "등록/수정", description = "등록/수정 API")
-	@PostMapping("/{level}")
-    public Mono<ResponseEntity<Boss>> save(@RequestBody Boss boss, @PathVariable("level") String level) throws Exception {
-		boss.setLevel(level);
+	@PostMapping
+    public Mono<ResponseEntity<Boss>> save(@RequestBody Boss boss) throws Exception {
 		return bossService.save(boss)
 				.map(ResponseEntity::ok);
 
