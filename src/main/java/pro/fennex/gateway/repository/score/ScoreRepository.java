@@ -9,13 +9,10 @@ import reactor.core.publisher.Mono;
 
 @Repository
 public interface ScoreRepository extends R2dbcRepository<Score, String> {
-	Mono<Score> findByUserIdAndLevelAndIndex(String userId, String level, String index);
 
 	Flux<Score> findAllByLevel(String level);
 
 	Mono<Void> deleteAllByUnionName(String union);
-
-	Mono<Void> deleteByUserIdAndLevelAndIndex(String userId, String level, String index);
 
 }
 

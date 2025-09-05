@@ -64,7 +64,7 @@ public class Score implements Persistable<String> {
 
 	@Override
 	public String getId() {
-		return this.userId;
+		return this.userId + '-' + this.level + '-' + this.index;
 	}
 
 	@Override

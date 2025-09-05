@@ -59,7 +59,7 @@ public class ScoreRestController extends BaseV1Controller {
 			@Parameter(hidden = true) @AuthenticationPrincipal OidcUser oidcUser
 			, @PathVariable("level") String level
 			, @PathVariable("index") String index) throws Exception {
-		return scoreService.get(oidcUser.getSubject(), level, index)
+		return scoreService.get(getId(oidcUser.getSubject(), level, index))
 	            .map(ResponseEntity::ok);
     }
 
@@ -69,7 +69,7 @@ public class ScoreRestController extends BaseV1Controller {
 			@Parameter(hidden = true) @AuthenticationPrincipal OidcUser oidcUser
 			, @PathVariable("level") String level
 			, @PathVariable("index") String index) throws Exception {
-		return scoreService.remove(oidcUser.getSubject(), level, index)
+		return scoreService.remove(getId(oidcUser.getSubject(), level, index))
 				.map(ResponseEntity::ok);
     }
 
@@ -80,6 +80,10 @@ public class ScoreRestController extends BaseV1Controller {
 
 		return scoreService.removeAll(union)
 				.map(ResponseEntity::ok);
+	}
+
+	private String getId(String userId, String level, String index){
+		return userId + '-' + level + '-' + index;
 	}
 }
 
